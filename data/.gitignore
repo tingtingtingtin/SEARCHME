@@ -1,0 +1,17 @@
+__pycache__/
+
+# DATA - DO NOT COMMIT BIG FILES
+*.csv
+*.json
+*.parquet
+*.sql
+!*.txt
+
+models/
+*.pt
+*.bin
+*.h5
+
+spark-warehouse/
+derby.log
+metastore_db/
