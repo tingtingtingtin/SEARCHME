@@ -32,7 +32,7 @@ def keyword_search(query, k=5):
 
 # testing on a sample query
 if __name__ == "__main__":
-    test_query = "machine learning models"
+    test_query = "api rate limiting"
     print(f"\nSearching for: '{test_query}'")
     
     results = keyword_search(test_query, k=3) # adjust k for more results
