@@ -1,18 +1,27 @@
 from keyword_search import keyword_search
 import json
 
-with open("data/ground_truth.json") as f:
-    ground_truth = json.load(f)
+try:
+    with open("data/ground_truth.json") as f:
+        ground_truth = json.load(f)
+except:
+    print("Error: data/ground_truth.json not found. Make sure you it. (not in repo)")
+    exit()
 
 def calculate_metrics(retrieved_ids, relevant_ids, k):
     retrieved_k = retrieved_ids[:k]
+    actual_k = len(retrieved_k)
+    
+    if actual_k == 0:
+        return 0.0, 0.0
     
     relevant_set = set(relevant_ids)
     retrieved_set = set(retrieved_k)
     
     true_positives = len(relevant_set.intersection(retrieved_set))
     
-    precision = true_positives / k
+    # if we get fewer than k entries, make sure it doesn't artificially deflate the score
+    precision = true_positives / actual_k 
     recall = true_positives / len(relevant_set) if len(relevant_set) > 0 else 0.0
     
     return precision, recall
