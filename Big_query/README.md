@@ -182,7 +182,7 @@ Export this result as CSV.
 
 ## STEP 9 — README extraction (external step)
 
-Because BigQuery does not expose README text directly, README content was fetched using a Python script.
+Because BigQuery does not expose README text directly, README content was fetched using a Python script `readme_reader.py`.
 
 Process:
 
