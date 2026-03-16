@@ -27,8 +27,9 @@ def keyword_search(query, k=5):
     results_df['bm25_score'] = doc_scores
     
     top_k_results = results_df.nlargest(k, 'bm25_score')
+    top_k_results['rank'] = range(1, len(top_k_results) + 1)
     
-    return top_k_results[['chunk_id', 'repo_name', 'bm25_score', 'chunk_text']]
+    return top_k_results[['rank','chunk_id', 'repo_name', 'bm25_score', 'chunk_text']]
 
 # testing on a sample query
 if __name__ == "__main__":
