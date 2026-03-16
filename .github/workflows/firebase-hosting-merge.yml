@@ -19,3 +19,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SEARCH_ME_CS226 }}
           channelId: live
           projectId: search-me-cs226
+          entryPoint: ./frontend
