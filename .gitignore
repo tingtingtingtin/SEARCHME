@@ -9,5 +9,6 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+*.json
 
 *.csv
