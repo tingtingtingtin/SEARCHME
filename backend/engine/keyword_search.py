@@ -1,45 +1,37 @@
-import pandas as pd
 import string
+import pandas as pd
 from rank_bm25 import BM25Okapi
 
+class KeywordSearchEngine:
+    def __init__(self):
+        self.bm25 = None
+        self.df = None
 
-try:
-    df = pd.read_csv("data/local_repo_data.csv")
-except FileNotFoundError:
-    print(f"Error: {"local_repo_data.csv"} not found. Run extract_data.py first, or run keyword_search.py from the root.")
-    exit()
-
-df['chunk_text'] = df['chunk_text'].fillna("")
-def tokenize(text):
-    text = text.lower()
-    text = text.translate(str.maketrans('', '', string.punctuation))
-    return text.split()
-
-# tokenize the texts and initialize a bm25 model with it
-tokenized_corpus = [tokenize(doc) for doc in df['chunk_text']]
-bm25 = BM25Okapi(tokenized_corpus)
-
-def keyword_search(query, k=5):
-    tokenized_query = tokenize(query)
-    doc_scores = bm25.get_scores(tokenized_query)
+    def _tokenize(self, text):
+        text = str(text).lower()
+        text = text.translate(str.maketrans('', '', string.punctuation))
+        return text.split()
     
-    results_df = df.copy()
-    results_df['bm25_score'] = doc_scores
-    
-    top_k_results = results_df.nlargest(k, 'bm25_score')
-    top_k_results['rank'] = range(1, len(top_k_results) + 1)
-    
-    return top_k_results[['rank','chunk_id', 'repo_name', 'bm25_score', 'chunk_text']]
-
-# testing on a sample query
-if __name__ == "__main__":
-    test_query = "api rate limiting"
-    print(f"\nSearching for: '{test_query}'")
-    
-    results = keyword_search(test_query, k=3) # adjust k for more results
-    
-    for index, row in results.iterrows():
-        print(f"\nRepo: {row['repo_name']}")
-        print(f"Chunk ID: {row['chunk_id']}")
-        print(f"Score: {row['bm25_score']:.4f}")
-        print(f"Snippet: {row['chunk_text'][:150]}...")
+    # in the app, get your production data dataframe and run it with build_index first
+    def build_index(self, corpus_df):
+        self.df = corpus_df.copy()
+        self.df['chunk_text'] = self.df['chunk_text'].fillna("")
+        tokenized_corpus = [self._tokenize(doc) for doc in self.df['chunk_text']]
+        self.bm25 = BM25Okapi(tokenized_corpus)
+ 
+    # needs build_index first
+    def search(self, query, k=5):
+        if self.bm25 is None:
+            raise RuntimeError("BM25 index has not been built; make sure you call build_index() first.")
+        tokenized_query = self._tokenize(query)
+        
+        doc_scores = self.bm25.get_scores(tokenized_query)
+        
+        results_df = self.df.copy()
+        results_df['bm25_score'] = doc_scores
+        top_k_results = results_df.nlargest(k, 'bm25_score').copy()
+        
+        top_k_results['rank'] = range(1, len(top_k_results) + 1)
+        
+        final_results = top_k_results[['rank', 'bm25_score', 'chunk_id', 'repo_name', 'chunk_text']]
+        return final_results.to_dict(orient='records')
