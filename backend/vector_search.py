@@ -16,8 +16,7 @@ def vector_search(query, k=10):
     embedding = model.get_embeddings([query])[0].values
     sql = f"""
     SELECT
-        base.repo_name,
-        distance
+        base.repo_name
     FROM VECTOR_SEARCH(
         TABLE `{PROJECT}.{DATASET}.{TABLE}`, 
         'embedding', 
