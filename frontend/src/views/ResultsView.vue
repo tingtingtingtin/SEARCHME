@@ -67,24 +67,23 @@ onMounted(() => {
       <div v-else class="space-y-0">
         <div 
           v-for="repo in searchStore.results" 
-          :key="repo.id" 
+          :key="repo.repo_name" 
           class="border-t-2 border-b-2 border-gray-500 py-5 -mb-0.5"
         >
           <div class="flex justify-between items-baseline mb-1.25">
             <h3 class="text-xl font-medium m-0">
               <span>⑂</span> {{ repo.repo_name }}
             </h3>
-            <span class="text-xs text-gray-500">last updated: {{ repo.last_updated }}</span>
+            <!-- <span class="text-xs text-gray-500">last updated: {{ repo.last_updated }}</span> -->
           </div>
           
           <div class="text-gray-400 text-sm mb-2">👤 {{ repo.owner }}</div>
           
           <div class="flex gap-3.75 text-gray-400 text-sm mb-3.75">
             <span>☆ {{ repo.stars }}</span>
-            <span>⑂ {{ repo.forks }}</span>
           </div>
           
-          <p class="text-gray-300 text-xs leading-relaxed m-0 mb-3.75 max-w-11/12">{{ repo.description }}</p>
+          <!-- <p class="text-gray-300 text-xs leading-relaxed m-0 mb-3.75 max-w-11/12">{{ repo. }}</p> -->
           
           <div class="text-right text-gray-500 text-xl cursor-pointer">≡</div>
         </div>

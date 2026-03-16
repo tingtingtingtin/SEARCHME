@@ -2,13 +2,10 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export interface RepoResult {
-  id: string
   repo_name: string
   owner: string
   stars: number
-  forks: number
-  last_updated: string
-  description: string
+  license: string | null
 }
 
 export const useSearchStore = defineStore('search', () => {
@@ -24,7 +21,7 @@ export const useSearchStore = defineStore('search', () => {
     query.value = searchQuery
 
     try {
-      const response = await fetch(`http://localhost:8000/api/search?q=${encodeURIComponent(searchQuery)}&sort=${sortBy}`)
+      const response = await fetch(`https://searchme-api-217336954570.us-central1.run.app/api/search?q=${encodeURIComponent(searchQuery)}&sort=${sortBy}`)
       const data = await response.json()
 
       results.value = data.results
