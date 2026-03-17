@@ -56,5 +56,3 @@ def vector_search(query, k=10):
 
     df = client.query(sql).to_dataframe()
     return df["repo_name"].tolist()
-
-print(vector_search("video game engine"))

@@ -49,5 +49,4 @@ def keyword_search(query, k=5):
     
     top_k_results['rank'] = range(1, len(top_k_results) + 1)
     
-    final_results = top_k_results[['rank', 'bm25_score', 'chunk_id', 'repo_name', 'chunk_text']]
-    return final_results.to_dict(orient='records')
+    return top_k_results["repo_name"].tolist()

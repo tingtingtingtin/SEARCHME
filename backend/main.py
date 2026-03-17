@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional
-from engine.vector_search import vector_search
+from typing import Optional
+from engine.rrf import hybrid_search
+from engine.metadata import get_metadata
 
 app = FastAPI()
 
@@ -19,26 +20,16 @@ class RepoResult(BaseModel):
     owner: str
     stars: int
     license: Optional[str]
+    readme_snippet: Optional[str]
 
 class SearchResponse(BaseModel):
     total_results: int
-    results: List[RepoResult]
+    results: list[RepoResult]
 
 @app.get("/api/search", response_model=SearchResponse)
-def search_repos(q: str):
-    repo_names = vector_search(q, k=10)
-
-    # stub metadata until BQ lookup is wired in
-    results = []
-    for repo_name in repo_names:
-        owner = repo_name.split("/")[0]
-        results.append({
-            "repo_name": repo_name,
-            "owner": owner,
-            "stars": 0,
-            "license": None
-        })
-
+def search_repos(q: str, k: int = 10):
+    repo_names = hybrid_search(q, k=k)
+    results = get_metadata(repo_names)
     return {
         "total_results": len(results),
         "results": results
