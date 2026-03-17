@@ -33,11 +33,11 @@ def build_index():
     _bm25 = BM25Okapi(tokenized_corpus)
     print("Index successfully built!")
 
-def search(query, k=5):
+def keyword_search(query, k=5):
     global _df, _bm25
     
     if _bm25 is None or _df is None:
-        raise RuntimeError("BM25 index has not been built; make sure you call build_index() first.")
+        build_index()
     
     tokenized_query = _tokenize(query)
     
