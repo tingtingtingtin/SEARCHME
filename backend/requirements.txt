@@ -1,9 +1,14 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 fastapi
 uvicorn
-pydantic
 google-cloud-bigquery
-google-cloud-aiplatform
-vertexai
+google-cloud-storage
+sentence-transformers==2.7.0
+transformers==4.41.0
+torch==2.1.0+cpu
+numpy<2
 pandas
+rank-bm25
+python-dotenv
 pyarrow
 db-dtypes

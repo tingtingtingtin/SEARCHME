@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
-from engine.rrf import hybrid_search
+from engine.reranker import hybrid_search
 from engine.metadata import get_metadata
 
 app = FastAPI()

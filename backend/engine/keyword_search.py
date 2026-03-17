@@ -16,12 +16,11 @@ def _tokenize(text):
 def build_index():
     global _df, _bm25
     
-    project_id = os.getenv("PROJECT_ID")
-    client = bigquery.Client(project=project_id)
+    client = bigquery.Client()
     
-    query = f"""
+    query = """
         SELECT chunk_id, repo_name, chunk_text 
-        FROM `{project_id}.searchme_dataset.embeddings_spark_50k_clean`
+        FROM `search-me-cs226.searchme_dataset.embeddings_spark_50k_clean`
     """
     
     print("Connecting to BigQuery and building in-memory index...")
