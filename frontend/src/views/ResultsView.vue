@@ -18,7 +18,7 @@ const triggerSearch = () => {
 
 const renderSnippet = (text: string | null) => {
   if (!text) return ''
-  const cleaned = text.replace(/!\[.*?\]\(.*?\)/g, '').replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/g, '')
+  const cleaned = text.replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/g, '').replace(/!\[.*?\]\(.*?\)/g, '')
   return marked.parse(cleaned) as string
 }
 
@@ -56,13 +56,14 @@ onMounted(() => {
     <main class="max-w-3xl mx-auto px-5">
       <div class="flex justify-between items-center mb-5 text-sm">
         <div class="flex items-center gap-2">
-          <span>⇃ sort by: </span>
+          <span>⇃ Sort by: </span>
           <select
             v-model="searchStore.sortBy"
             class="bg-transparent text-white border-none outline-none cursor-pointer"
+            style="background-color: #111827"
           >
-            <option value="relevance">relevance</option>
-            <option value="stars">stars</option>
+            <option value="relevance" style="background-color: #111827; color: white">Relevance</option>
+            <option value="stars" style="background-color: #111827; color: white">Stars</option>
           </select>
         </div>
         <div class="text-xs text-gray-400">{{ searchStore.totalResults }} results</div>

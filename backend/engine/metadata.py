@@ -6,8 +6,8 @@ client = bigquery.Client()
 def clean_snippet(text: str, length: int = 500) -> str:
     if not text:
         return ""
-    text = re.sub(r'!\[.*?\]\(.*?\)', '', text)            # remove images
     text = re.sub(r'\[!\[.*?\]\(.*?\)\]\(.*?\)', '', text) # remove badge links
+    text = re.sub(r'!\[.*?\]\(.*?\)', '', text)            # remove images
     text = re.sub(r'https?://\S+', '', text)                # remove URLs
     text = re.sub(r'#{1,6}\s*(.*)', r'**\1**', text)       # headers -> bold
     text = re.sub(r'\n{3,}', '\n\n', text)                  # collapse whitespace
