@@ -20,14 +20,14 @@ const submitSearch = () => {
 
     <form @submit.prevent="submitSearch" class="w-full max-w-2xl">
       <div class="relative">
-        <input 
-          v-model="searchInput" 
-          type="text" 
-          placeholder="Search repositories..." 
+        <input
+          v-model="searchInput"
+          type="text"
+          placeholder="Search repositories..."
           class="w-full px-5 py-4 pr-16 bg-transparent border-2 transition-all focus:border-blue-500 border-white text-white text-lg outline-none"
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           class="absolute right-4 top-1/2 -translate-y-1/2 bg-none border-none text-white text-xl cursor-pointer"
         >
           🔍

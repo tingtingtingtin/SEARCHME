@@ -7,11 +7,17 @@ import { RouterView } from 'vue-router'
 </template>
 
 <style>
-@import "tailwindcss";
+@import 'tailwindcss';
 body {
   background-color: #1a1a1a;
   color: #ffffff;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   margin: 0;
   padding: 0;
 }
