@@ -1,45 +1,53 @@
-import pandas as pd
 import string
+import os
+import pandas as pd
 from rank_bm25 import BM25Okapi
+from google.cloud import bigquery
 
+_bm25 = None
+_df = None
 
-try:
-    df = pd.read_csv("data/local_repo_data.csv")
-except FileNotFoundError:
-    print(f"Error: {"local_repo_data.csv"} not found. Run extract_data.py first, or run keyword_search.py from the root.")
-    exit()
-
-df['chunk_text'] = df['chunk_text'].fillna("")
-def tokenize(text):
-    text = text.lower()
+def _tokenize(text):
+    text = str(text).lower()
     text = text.translate(str.maketrans('', '', string.punctuation))
     return text.split()
 
-# tokenize the texts and initialize a bm25 model with it
-tokenized_corpus = [tokenize(doc) for doc in df['chunk_text']]
-bm25 = BM25Okapi(tokenized_corpus)
+# call this first
+def build_index():
+    global _df, _bm25
+    
+    project_id = os.getenv("PROJECT_ID")
+    client = bigquery.Client(project=project_id)
+    
+    query = f"""
+        SELECT chunk_id, repo_name, chunk_text 
+        FROM `{project_id}.searchme_dataset.embeddings_spark_50k_clean`
+    """
+    
+    print("Connecting to BigQuery and building in-memory index...")
+    _df = client.query(query).to_dataframe()
+    
+    _df['chunk_text'] = _df['chunk_text'].fillna("")
+    
+    tokenized_corpus = [_tokenize(doc) for doc in _df['chunk_text']]
+    _bm25 = BM25Okapi(tokenized_corpus)
+    print("Index successfully built!")
 
 def keyword_search(query, k=5):
-    tokenized_query = tokenize(query)
-    doc_scores = bm25.get_scores(tokenized_query)
+    global _df, _bm25
     
-    results_df = df.copy()
+    if _bm25 is None or _df is None:
+        build_index()
+    
+    tokenized_query = _tokenize(query)
+    
+    doc_scores = _bm25.get_scores(tokenized_query)
+    
+    results_df = _df.copy()
     results_df['bm25_score'] = doc_scores
+    top_k_results = results_df.nlargest(k, 'bm25_score').copy()
     
-    top_k_results = results_df.nlargest(k, 'bm25_score')
     top_k_results['rank'] = range(1, len(top_k_results) + 1)
     
-    return top_k_results[['rank','chunk_id', 'repo_name', 'bm25_score', 'chunk_text']]
-
-# testing on a sample query
-if __name__ == "__main__":
-    test_query = "api rate limiting"
-    print(f"\nSearching for: '{test_query}'")
-    
-    results = keyword_search(test_query, k=3) # adjust k for more results
-    
-    for index, row in results.iterrows():
-        print(f"\nRepo: {row['repo_name']}")
-        print(f"Chunk ID: {row['chunk_id']}")
-        print(f"Score: {row['bm25_score']:.4f}")
-        print(f"Snippet: {row['chunk_text'][:150]}...")
+    final_results = top_k_results[['rank', 'bm25_score', 'chunk_id', 'repo_name', 'chunk_text']]
+    return final_results.to_dict(orient='records')
