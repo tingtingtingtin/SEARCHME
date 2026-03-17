@@ -8,7 +8,7 @@ def rrf_fusion(vector_results, bm25_results, k=20):
   for rank, repo in enumerate(vector_results, start=1):
     scores[repo] = scores.get(repo, 0) + 1 / (k+rank)
 
-  # Vector scores (ranks)
+  # BM25 scores (ranks)
   for rank, repo in enumerate(bm25_results, start=1):
     scores[repo] = scores.get(repo, 0) + 1 / (k+rank)
 
