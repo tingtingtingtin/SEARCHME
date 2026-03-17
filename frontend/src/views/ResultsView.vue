@@ -8,13 +8,11 @@ const route = useRoute()
 const router = useRouter()
 const searchStore = useSearchStore()
 const localQuery = ref((route.query.q as string) || '')
-const expanded = ref<string | null>(null)
 
 const triggerSearch = () => {
   if (localQuery.value.trim()) {
     router.replace({ query: { q: localQuery.value } })
     searchStore.performSearch(localQuery.value)
-    expanded.value = null
   }
 }
 
@@ -101,9 +99,8 @@ onMounted(() => {
             <a
               :href="`https://github.com/${repo.repo_name}`"
               target="_blank"
-              class="text-xl font-medium hover:text-blue-400 transition-colors"
+              class="text-xl font-medium transition-colors"
             >
-              <span>⑂</span>
               <span class="text-gray-400">{{ repo.owner }}</span>
               <span class="text-gray-500">/</span>
               <span class="text-white">{{ repo.repo_name.split('/')[1] }}</span>
@@ -126,19 +123,6 @@ onMounted(() => {
           <p
             v-if="repo.readme_snippet"
             class="text-gray-300 text-xs leading-relaxed m-0 mb-3.75 max-w-11/12 prose prose-invert prose-xs"
-            v-html="renderSnippet(repo.readme_snippet)"
-          />
-
-          <div
-            class="text-right text-gray-500 text-xl cursor-pointer hover:text-gray-300 transition-colors select-none"
-            @click="expanded = expanded === repo.repo_name ? null : repo.repo_name"
-          >
-            ≡
-          </div>
-
-          <div
-            v-if="expanded === repo.repo_name"
-            class="mt-3 text-gray-300 text-xs prose prose-invert prose-xs max-h-64 overflow-y-auto border-t border-gray-700 pt-3"
             v-html="renderSnippet(repo.readme_snippet)"
           />
         </div>
