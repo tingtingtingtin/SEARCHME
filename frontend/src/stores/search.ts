@@ -17,7 +17,7 @@ export const useSearchStore = defineStore('search', () => {
   const totalResults = ref(0)
   const isSearchLoading = ref(false)
   const sortBy = ref('relevance')
-  const queryTime = ref(0);
+  const queryTime = ref(0)
 
   const sortedResults = computed(() => {
     const r = [...results.value]
@@ -31,9 +31,10 @@ export const useSearchStore = defineStore('search', () => {
     error.value = null
     query.value = searchQuery
     try {
-      const response = await fetch(
-        `https://searchme-api-217336954570.us-central1.run.app/api/search?q=${encodeURIComponent(searchQuery)}`,
-      )
+      const apiUrl =
+        import.meta.env.VITE_API_URL ||
+        'https://searchme-api-217336954570.us-central1.run.app/api/search'
+      const response = await fetch(`${apiUrl}?q=${encodeURIComponent(searchQuery)}`)
       const data = await response.json()
       results.value = data.results
       totalResults.value = data.total_results

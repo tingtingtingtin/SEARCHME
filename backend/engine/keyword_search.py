@@ -1,5 +1,4 @@
 import string
-import os
 import pandas as pd
 from rank_bm25 import BM25Okapi
 from google.cloud import bigquery

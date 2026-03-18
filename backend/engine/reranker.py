@@ -2,7 +2,7 @@ from .vector_search import vector_search
 from .keyword_search import keyword_search
 from concurrent.futures import ThreadPoolExecutor
 
-def rrf_fusion(vector_results, bm25_results, k=20):
+def rrf_fusion(vector_results: list[str], bm25_results: list[str], k: int = 20) -> list[str]:
   scores = {}
 
   # Vector scores (ranks)
@@ -17,7 +17,7 @@ def rrf_fusion(vector_results, bm25_results, k=20):
   ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
   return [repo for repo, _ in ranked]
 
-def hybrid_search(query, k=10):
+def hybrid_search(query: str, k: int = 10) -> list[str]:
     with ThreadPoolExecutor() as executor: # parallelize
         vector_future = executor.submit(vector_search, query, k)
         bm25_future = executor.submit(keyword_search, query, k)

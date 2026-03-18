@@ -12,3 +12,17 @@ Thumbs.db
 *.json
 
 *.csv
+**/node_modules/
+**/dist/
+**/coverage/
+**/__pycache__/
+*.py[cod]
+*.tsbuildinfo
+*.so
+*.dll
+*.dylib
+*.exe
+*.o
+*.a
+*.class
+**/.ipynb_checkpoints/
