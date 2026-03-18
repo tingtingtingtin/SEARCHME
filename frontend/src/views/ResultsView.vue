@@ -68,7 +68,7 @@ onMounted(() => {
         </div>
         <div class="text-xs text-gray-400">{{ searchStore.totalResults }} results</div>
         <div v-if="searchStore.results.length > 0" class="text-xs text-gray-500 mt-1">
-          {{ searchStore.queryTime.toPrecision(1) }}ms
+          {{ searchStore.queryTime > 1000 ? (searchStore.queryTime / 1000).toFixed(1) + 's' : searchStore.queryTime + 'ms' }}
         </div>
       </div>
 
