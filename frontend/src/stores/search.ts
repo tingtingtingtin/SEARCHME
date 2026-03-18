@@ -37,7 +37,7 @@ export const useSearchStore = defineStore('search', () => {
       const data = await response.json()
       results.value = data.results
       totalResults.value = data.total_results
-      query.value = data.query_time
+      queryTime.value = data.query_time
     } catch (e) {
       error.value = 'Something went wrong. Please try again.'
       results.value = []
