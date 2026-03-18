@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Optional
 from engine.reranker import hybrid_search
 from engine.metadata import get_metadata
+import time
 
 app = FastAPI()
 
@@ -25,12 +26,16 @@ class RepoResult(BaseModel):
 class SearchResponse(BaseModel):
     total_results: int
     results: list[RepoResult]
+    query_time: int
 
 @app.get("/api/search", response_model=SearchResponse)
 def search_repos(q: str, k: int = 10):
+    start = time.time()
     repo_names = hybrid_search(q, k=k)
     results = get_metadata(repo_names)
+    elapsed = round((time.time() - start) * 1000)  # ms
     return {
         "total_results": len(results),
-        "results": results
+        "results": results,
+        "query_time": elapsed
     }

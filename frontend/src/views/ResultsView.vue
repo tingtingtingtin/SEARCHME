@@ -67,6 +67,9 @@ onMounted(() => {
           </select>
         </div>
         <div class="text-xs text-gray-400">{{ searchStore.totalResults }} results</div>
+        <div v-if="searchStore.results.length > 0" class="text-xs text-gray-500 mt-1">
+          {{ searchStore.queryTime.toPrecision(1) }}ms
+        </div>
       </div>
 
       <div v-if="searchStore.isSearchLoading" class="space-y-0">

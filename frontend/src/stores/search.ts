@@ -17,6 +17,7 @@ export const useSearchStore = defineStore('search', () => {
   const totalResults = ref(0)
   const isSearchLoading = ref(false)
   const sortBy = ref('relevance')
+  const queryTime = ref(0);
 
   const sortedResults = computed(() => {
     const r = [...results.value]
@@ -36,6 +37,7 @@ export const useSearchStore = defineStore('search', () => {
       const data = await response.json()
       results.value = data.results
       totalResults.value = data.total_results
+      query.value = data.query_time
     } catch (e) {
       error.value = 'Something went wrong. Please try again.'
       results.value = []
@@ -54,5 +56,6 @@ export const useSearchStore = defineStore('search', () => {
     sortBy,
     error,
     performSearch,
+    queryTime,
   }
 })
