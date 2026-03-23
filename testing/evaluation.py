@@ -12,26 +12,26 @@ from testing.keyword_search_testing import keyword_search
 try:
     with open("data/ground_truth.json") as f:
         ground_truth = json.load(f)
-except:
-    print("Error: data/ground_truth.json not found. Make sure you it. (not in repo)")
+except FileNotFoundError:
+    print("Error: data/ground_truth.json not found. This file is not tracked in the repo.")
     exit()
 
 def calculate_metrics(retrieved_ids, relevant_ids, k):
     retrieved_k = retrieved_ids[:k]
     actual_k = len(retrieved_k)
-    
+
     if actual_k == 0:
         return 0.0, 0.0
-    
+
     relevant_set = set(relevant_ids)
     retrieved_set = set(retrieved_k)
-    
+
     true_positives = len(relevant_set.intersection(retrieved_set))
-    
-    # if we get fewer than k entries, make sure it doesn't artificially deflate the score
-    precision = true_positives / actual_k 
+
+    # If fewer than k entries are returned, use actual_k for precision denominator.
+    precision = true_positives / actual_k
     recall = true_positives / len(relevant_set) if len(relevant_set) > 0 else 0.0
-    
+
     return precision, recall
 
 k_value = 5
@@ -44,11 +44,11 @@ print("------------------------------------------")
 for query, relevant_docs in ground_truth.items():
     results_df = keyword_search(query, k=k_value)
     retrieved_docs = results_df['chunk_id'].tolist()
-    
+
     p, r = calculate_metrics(retrieved_docs, relevant_docs, k_value)
     total_precision += p
     total_recall += r
-    
+
     print(f"Query: '{query}'")
     print(f"- P@{k_value}: {p:.2f}")
     print(f"- R@{k_value}: {r:.2f}")

@@ -4,7 +4,7 @@ import torch
 
 _model_cache = {}
 
-def get_model():
+def get_model() -> SentenceTransformer:
     if "all-minilm" not in _model_cache:
         device = "cuda" if torch.cuda.is_available() else "cpu"
         _model_cache["all-minilm"] = SentenceTransformer(
@@ -13,12 +13,13 @@ def get_model():
         )
     return _model_cache["all-minilm"]
 
-def get_embedding(text):
+
+def get_embedding(text: str) -> list[float]:
     model = get_model()
 
     vec = model.encode(
         text,
-        normalize_embeddings=True  
+        normalize_embeddings=True
     )
 
     return vec.tolist()
@@ -29,7 +30,8 @@ PROJECT = "search-me-cs226"
 DATASET = "searchme_dataset"
 TABLE = "embeddings_spark_50k_clean"
 
-def vector_search(query, k=10):
+
+def vector_search(query: str, k: int = 10) -> list[str]:
     embedding = get_embedding(query)
     sql = f"""
     WITH results AS (
@@ -37,10 +39,10 @@ def vector_search(query, k=10):
             base.repo_name,
             distance
         FROM VECTOR_SEARCH(
-            TABLE `{PROJECT}.{DATASET}.{TABLE}`, 
-            'embedding', 
+            TABLE `{PROJECT}.{DATASET}.{TABLE}`,
+            'embedding',
             (SELECT {embedding} AS embedding),
-            top_k => {k * 10},   
+            top_k => {k * 10},
             distance_type => 'COSINE'
         )
     )

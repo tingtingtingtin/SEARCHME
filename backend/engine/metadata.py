@@ -15,6 +15,8 @@ def clean_snippet(text: str, length: int = 500) -> str:
     return text[:length]
 
 def get_metadata(repo_names: list[str]) -> list[dict]:
+    if not repo_names:
+        return []
     ids_str = ", ".join(f'"{r}"' for r in repo_names)
     query = f"""
         SELECT repo_name, stars, license, readme_text

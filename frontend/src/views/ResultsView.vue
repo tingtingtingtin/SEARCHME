@@ -62,13 +62,19 @@ onMounted(() => {
             class="bg-transparent text-white border-none outline-none cursor-pointer"
             style="background-color: #111827"
           >
-            <option value="relevance" style="background-color: #111827; color: white">Relevance</option>
+            <option value="relevance" style="background-color: #111827; color: white">
+              Relevance
+            </option>
             <option value="stars" style="background-color: #111827; color: white">Stars</option>
           </select>
         </div>
         <div class="text-xs text-gray-400">{{ searchStore.totalResults }} results</div>
         <div v-if="searchStore.results.length > 0" class="text-xs text-gray-500 mt-1">
-          {{ searchStore.queryTime > 1000 ? (searchStore.queryTime / 1000).toFixed(1) + 's' : searchStore.queryTime + 'ms' }}
+          {{
+            searchStore.queryTime > 1000
+              ? (searchStore.queryTime / 1000).toFixed(1) + 's'
+              : searchStore.queryTime + 'ms'
+          }}
         </div>
       </div>
 
